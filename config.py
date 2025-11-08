@@ -61,7 +61,7 @@ class ICM:
 
     save_dir = "outputs"
     date_str = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-    ICM_data_path = f"{save_dir}/truthfulqa_train_ICM_data_{date_str}.json"
+    ICM_save_data_path = f"{save_dir}/truthfulqa_train_ICM_data_{date_str}.json"
 
 
 def parse_args():
@@ -73,6 +73,8 @@ def parse_args():
                         help="Number of test samples to evaluate",default=100)
     parser.add_argument("--n-many-shot-samples", type=int, 
                         help="Number of many-shot examples to use",default=20)
+    parser.add_argument("--ICM-data-path", type=str, 
+                        help="Path to ICM data",default=evals.ICM_data_path)
     
     # Eval selection - choose which evals to run
     parser.add_argument("--evals", type=str, nargs='+', 
@@ -83,7 +85,7 @@ def parse_args():
     
     # ICM-specific parameters
     parser.add_argument("--icm-max-iter", type=int,
-                        help="Maximum iterations for ICM algorithm",default=1000)
+                        help="Maximum iterations for ICM algorithm",default=500)
     
     args = parser.parse_args()
     
@@ -92,7 +94,8 @@ def parse_args():
         evals.n_test_samples = args.n_test_samples
     if args.n_many_shot_samples is not None:
         evals.n_many_shot_samples = args.n_many_shot_samples
-    
+    if args.ICM_data_path is not None:
+        evals.ICM_data_path = args.ICM_data_path
     # Override ICM parameters
     if args.icm_max_iter is not None:
         ICM.max_iter = args.icm_max_iter

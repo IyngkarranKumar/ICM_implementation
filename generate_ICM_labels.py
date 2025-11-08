@@ -130,6 +130,6 @@ logger.info(f"Size of D_ICM after ICM labelling: {len(D_ICM)}")
 #%%
 
 current_time_str = datetime.now().strftime("%H_%M_%S")
-with open(config.ICM.ICM_data_path, "w") as f:
+with open(config.ICM.ICM_save_data_path, "w") as f:
     json.dump(D_ICM, f, indent=2)
-logger.info(f"ICM data saved to {config.ICM.ICM_data_path}")
+logger.info(f"ICM data saved to {config.ICM.ICM_save_data_path}")

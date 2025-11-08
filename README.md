@@ -13,7 +13,7 @@ mamba run -n ICM pip install -r mats_9.0_feng_ududec_work_test/requirements.txt
 ```
 
 ## Configuration
-- Make copy of `.env.main.template` and add HYPERBOLIC_API_KEY
+- Make copy of `.env.main.template` and name it `.env.main`. Then add HYPERBOLIC_API_KEY
 - Main config settings can be passed as command line arguments (see below)
 - Adjust `config.py` to toggle evals, model names, dataset paths, or sample counts.
 
@@ -24,10 +24,10 @@ TruthfulQA train/test JSON files in `mats_9.0_feng_ududec_work_test/data/`. Gene
 
 ## Generate ICM Labels
 
-Generate ICM labels with a specified maximum number of iterations (default 1000). Saved to `outputs/truthfulqa_train_ICM_data_{date_time}.json`
+Generate ICM labels with a specified maximum number of iterations (default 500). Saved to `outputs/truthfulqa_train_ICM_data_{date_time}.json`. Note - the algorithm usually generates the full training dataset within ~400 iterations.
 
 ```bash
-python generate_ICM_labels.py --icm-max-iter 1000
+python generate_ICM_labels.py --icm-max-iter 500
 ```
 
 The directory to save file path is configurable in `config.py` via `config.ICM`.
@@ -36,10 +36,10 @@ The directory to save file path is configurable in `config.py` via `config.ICM`.
 
 ## Run Evaluations
 
-Run evaluations with specific number of test examples and in-context examples. 
+Run evaluations with specific number of test examples and in-context examples. Pass an ICM dataset path such as:
 
 ```bash
-python run_evals.py --n-test-samples 100 --n-many-shot-samples 20
+python run_evals.py --n-test-samples 100 --n-many-shot-samples 20 --ICM-data-path outputs/truthfulqa_train_ICM_data.json
 ```
 
 Specify which evaluations to run from ['base','chat','golden','ICM'] with --evals argument (default is all). NOTE: ICM dataset must be generated before 'ICM' evaluation can be run. 
