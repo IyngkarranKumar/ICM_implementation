@@ -1,0 +1,5 @@
+scratch*
+*scratch*
+__pycache__/
+.env.main
+outputs/*

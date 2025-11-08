@@ -1,0 +1,124 @@
+#running evals
+from datetime import datetime
+import argparse
+
+class evals:
+    DEBUG = False
+    USE_HYPERBOLIC_API = True
+    chicken_shot = "hello"
+
+    n_test_samples = 100
+    n_many_shot_samples = 20
+    use_base_chat_prompt = True
+    base_chat_prompt_path = "pretrained_chat_prompt.txt"
+
+    prepend_prompt = "Answer with ONLY the word True or the word False. Do not include any other text, explanation, or punctuation."
+    classification_append_str = "I think this claim is:"
+    max_new_tokens = 5
+
+    # Set model names
+    # base_model = "Qwen/Qwen2.5-0.5B"
+    # chat_model = "Qwen/Qwen2.5-0.5B-Instruct"
+    base_model = "meta-llama/Meta-Llama-3.1-405B"
+    chat_model = "meta-llama/Meta-Llama-3.1-405B-Instruct"
+    
+    
+
+    EVALS_TO_RUN = {
+        "base": True,
+        "chat": True,
+        "many-shot-golden": True,
+        "ICM": True,
+    }
+
+    date_str = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    train_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_train.json"
+    test_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_test.json"
+    ICM_data_path = "outputs/truthfulqa_train_ICM_21_21_32.json"
+    EVAL_RESULTS_SAVE_PATH = f"outputs/truthfulqa_eval_results_{date_str}.json"
+
+class ICM:
+    DEBUG = False
+    USE_HYPERBOLIC_API = True
+
+    T_0 = 10.0
+    T_min = 0.01
+    beta = 0.99
+    alpha = 30
+    K = 8
+    max_iter = 1000
+    max_new_tokens = 5
+    logprobs = 10
+    topk = 5  # for debugging
+    label_set = ["True", "False"]
+
+    # ICM_model = "Qwen/Qwen2.5-0.5B"
+    ICM_model = "meta-llama/Meta-Llama-3.1-405B"
+    if "instruct" in ICM_model.lower():
+        raise ValueError("ICM model must be a base model - Hyperion API does not support logprobs for instruct models")
+
+    train_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_train.json"
+
+    save_dir = "outputs"
+    date_str = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    ICM_data_path = f"{save_dir}/truthfulqa_train_ICM_data_{date_str}.json"
+
+
+def parse_args():
+    """Parse command line arguments and override config values"""
+    parser = argparse.ArgumentParser(description="TruthfulQA Evaluation Script")
+    
+    # Sample sizes
+    parser.add_argument("--n-test-samples", type=int, 
+                        help="Number of test samples to evaluate")
+    parser.add_argument("--n-many-shot-samples", type=int, 
+                        help="Number of many-shot examples to use")
+    
+    # Eval selection - choose which evals to run
+    parser.add_argument("--evals", type=str, nargs='+', 
+                        choices=["base", "chat", "many-shot-golden", "ICM"],
+                        help="Which evaluations to run (space-separated). If not specified, runs all enabled in config.")
+    
+    # Alternative: skip specific evals
+    parser.add_argument("--skip-base", action="store_true", 
+                        help="Skip base model evaluation")
+    parser.add_argument("--skip-chat", action="store_true", 
+                        help="Skip chat model evaluation")
+    parser.add_argument("--skip-many-shot-golden", action="store_true", 
+                        help="Skip many-shot-golden evaluation")
+    parser.add_argument("--skip-icm", action="store_true", 
+                        help="Skip ICM evaluation")
+    
+    # ICM-specific parameters
+    parser.add_argument("--icm-max-iter", type=int,
+                        help="Maximum iterations for ICM algorithm")
+    
+    args = parser.parse_args()
+    
+    # Override sample sizes
+    if args.n_test_samples is not None:
+        evals.n_test_samples = args.n_test_samples
+    if args.n_many_shot_samples is not None:
+        evals.n_many_shot_samples = args.n_many_shot_samples
+    
+    # Override ICM parameters
+    if args.icm_max_iter is not None:
+        ICM.max_iter = args.icm_max_iter
+    
+    # Handle eval selection
+    if args.evals is not None:
+        # If --evals is specified, only run those evals
+        for eval_name in evals.EVALS_TO_RUN.keys():
+            evals.EVALS_TO_RUN[eval_name] = eval_name in args.evals
+    else:
+        # Otherwise, use skip flags to disable specific evals
+        if args.skip_base:
+            evals.EVALS_TO_RUN["base"] = False
+        if args.skip_chat:
+            evals.EVALS_TO_RUN["chat"] = False
+        if args.skip_many_shot_golden:
+            evals.EVALS_TO_RUN["many-shot-golden"] = False
+        if args.skip_icm:
+            evals.EVALS_TO_RUN["ICM"] = False
+    
+    return args

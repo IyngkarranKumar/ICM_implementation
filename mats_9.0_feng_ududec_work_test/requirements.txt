@@ -1,0 +1,17 @@
+# core
+openai
+numpy
+
+# plotting
+matplotlib
+seaborn
+
+# utilities
+tqdm
+tiktoken
+dotenv
+
+#added
+torch #to load in a small model for debugging
+transformers #to load in a small model for debugging
+
