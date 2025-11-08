@@ -27,14 +27,14 @@ class evals:
     EVALS_TO_RUN = {
         "base": True,
         "chat": True,
-        "many-shot-golden": True,
+        "golden": True,
         "ICM": True,
     }
 
     date_str = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
     train_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_train.json"
     test_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_test.json"
-    ICM_data_path = "outputs/truthfulqa_train_ICM_21_21_32.json"
+    ICM_data_path = "outputs/truthfulqa_train_ICM_data_08_11_2025_00_30_16.json"
     EVAL_RESULTS_SAVE_PATH = f"outputs/truthfulqa_eval_results_{date_str}.json"
 
 class ICM:
@@ -70,24 +70,16 @@ def parse_args():
     
     # Sample sizes
     parser.add_argument("--n-test-samples", type=int, 
-                        help="Number of test samples to evaluate",default=1000)
+                        help="Number of test samples to evaluate",default=100)
     parser.add_argument("--n-many-shot-samples", type=int, 
                         help="Number of many-shot examples to use",default=20)
     
     # Eval selection - choose which evals to run
     parser.add_argument("--evals", type=str, nargs='+', 
-                        choices=["base", "chat", "many-shot-golden", "ICM"],
-                        help="Which evaluations to run (space-separated). If not specified, runs all enabled in config.",default=["base", "chat", "many-shot-golden", "ICM"])
+                        choices=["base", "chat", "golden", "ICM"],
+                        help="Which evaluations to run (space-separated). If not specified, runs all enabled in config.",default=["base", "chat", "golden", "ICM"])
     
-    # Alternative: skip specific evals
-    parser.add_argument("--skip-base", action="store_true", 
-                        help="Skip base model evaluation",default=False)
-    parser.add_argument("--skip-chat", action="store_true", 
-                        help="Skip chat model evaluation",default=False)
-    parser.add_argument("--skip-many-shot-golden", action="store_true", 
-                        help="Skip many-shot-golden evaluation",default=False)
-    parser.add_argument("--skip-icm", action="store_true", 
-                        help="Skip ICM evaluation",default=False)
+
     
     # ICM-specific parameters
     parser.add_argument("--icm-max-iter", type=int,
@@ -105,20 +97,8 @@ def parse_args():
     if args.icm_max_iter is not None:
         ICM.max_iter = args.icm_max_iter
     
-    # Handle eval selection
-    if args.evals is not None:
-        # If --evals is specified, only run those evals
-        for eval_name in evals.EVALS_TO_RUN.keys():
-            evals.EVALS_TO_RUN[eval_name] = eval_name in args.evals
-    else:
-        # Otherwise, use skip flags to disable specific evals
-        if args.skip_base:
-            evals.EVALS_TO_RUN["base"] = False
-        if args.skip_chat:
-            evals.EVALS_TO_RUN["chat"] = False
-        if args.skip_many_shot_golden:
-            evals.EVALS_TO_RUN["many-shot-golden"] = False
-        if args.skip_icm:
-            evals.EVALS_TO_RUN["ICM"] = False
-    
+
+    for eval_name in evals.EVALS_TO_RUN.keys():
+        evals.EVALS_TO_RUN[eval_name] = eval_name in args.evals
+
     return args

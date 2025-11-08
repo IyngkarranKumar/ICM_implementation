@@ -267,4 +267,3 @@ current_time_str = datetime.now().strftime("%H_%M_%S")
 plt.savefig(f"outputs/truthfulqa_accuracy_bar_chart_{current_time_str}.png")
 logger.info(f"Accuracy bar chart saved to outputs/truthfulqa_accuracy_bar_chart_{current_time_str}.png")
 
-breakpoint()
