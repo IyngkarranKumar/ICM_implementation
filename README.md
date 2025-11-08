@@ -25,8 +25,11 @@ TruthfulQA train/test JSON files in `mats_9.0_feng_ududec_work_test/data/`. Gene
 
 
 ## Generate ICM Labels
+
+Generate ICM labels with a specified maximum number of iterations (default 1000).
+
 ```bash
-python generate_ICM_labels.py
+python generate_ICM_labels.py --icm-max-iter 1000
 ```
 
 The directory to save file path is configurable in `config.py` via `config.ICM`.
@@ -34,8 +37,11 @@ The directory to save file path is configurable in `config.py` via `config.ICM`.
 
 
 ## Run Evaluations
+
+Run evaluations with specific number of test examples and in-context examples.
+
 ```bash
-python run_evals.py
+python run_evals.py --n-test-samples 100 --n-many-shot-samples 20
 ```
 
 The script saves metrics to `outputs/truthfulqa_eval_results_<timestamp>.json` and a bar chart PNG in `outputs/`.
