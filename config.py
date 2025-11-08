@@ -70,28 +70,28 @@ def parse_args():
     
     # Sample sizes
     parser.add_argument("--n-test-samples", type=int, 
-                        help="Number of test samples to evaluate")
+                        help="Number of test samples to evaluate",default=1000)
     parser.add_argument("--n-many-shot-samples", type=int, 
-                        help="Number of many-shot examples to use")
+                        help="Number of many-shot examples to use",default=20)
     
     # Eval selection - choose which evals to run
     parser.add_argument("--evals", type=str, nargs='+', 
                         choices=["base", "chat", "many-shot-golden", "ICM"],
-                        help="Which evaluations to run (space-separated). If not specified, runs all enabled in config.")
+                        help="Which evaluations to run (space-separated). If not specified, runs all enabled in config.",default=["base", "chat", "many-shot-golden", "ICM"])
     
     # Alternative: skip specific evals
     parser.add_argument("--skip-base", action="store_true", 
-                        help="Skip base model evaluation")
+                        help="Skip base model evaluation",default=False)
     parser.add_argument("--skip-chat", action="store_true", 
-                        help="Skip chat model evaluation")
+                        help="Skip chat model evaluation",default=False)
     parser.add_argument("--skip-many-shot-golden", action="store_true", 
-                        help="Skip many-shot-golden evaluation")
+                        help="Skip many-shot-golden evaluation",default=False)
     parser.add_argument("--skip-icm", action="store_true", 
-                        help="Skip ICM evaluation")
+                        help="Skip ICM evaluation",default=False)
     
     # ICM-specific parameters
     parser.add_argument("--icm-max-iter", type=int,
-                        help="Maximum iterations for ICM algorithm")
+                        help="Maximum iterations for ICM algorithm",default=1000)
     
     args = parser.parse_args()
     
