@@ -1,4 +1,4 @@
-# TruthfulQA Evaluation Runner
+# ICM implementation
 
 MATS Worktest - Implementing ICM algorithm for TruthfulQA
 
