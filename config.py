@@ -34,7 +34,7 @@ class evals:
     date_str = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
     train_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_train.json"
     test_data_path = "mats_9.0_feng_ududec_work_test/data/truthfulqa_test.json"
-    ICM_data_path = "outputs/truthfulqa_train_ICM_data_08_11_2025_00_30_16.json"
+    ICM_data_path = "outputs/truthfulqa_train_ICM_data.json"
     EVAL_RESULTS_SAVE_PATH = f"outputs/truthfulqa_eval_results_{date_str}.json"
 
 class ICM:

@@ -14,9 +14,7 @@ mamba run -n ICM pip install -r mats_9.0_feng_ududec_work_test/requirements.txt
 
 ## Configuration
 - Make copy of `.env.main.template` and add HYPERBOLIC_API_KEY
-
-
-
+- Main config settings can be passed as command line arguments (see below)
 - Adjust `config.py` to toggle evals, model names, dataset paths, or sample counts.
 
 
@@ -52,3 +50,8 @@ python run_evals.py --n-test-samples 100 --n-many-shot-samples 20 --evals chat I
 ```
 
 The script saves metrics to `outputs/truthfulqa_eval_results_<timestamp>.json` and a bar chart PNG in `outputs/`.
+
+## Results
+The `outputs` directory contains a set of results.
+- `outputs/truthfulqa_accuracy_bar_chart.png` - Bar chart akin to Figure 1 of paper.
+- `outputs/truthfulqa_train_ICM_data.json` - ICM-labelled dataset
