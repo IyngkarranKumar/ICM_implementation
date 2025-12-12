@@ -1,7 +1,5 @@
 # ICM implementation
 
-MATS Worktest - Implementing ICM algorithm for TruthfulQA
-
 ## Environment
 - `python3.10+`
 - `mamba` required - install with `conda install -n base -c conda-forge mamba`
